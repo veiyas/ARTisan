@@ -1,4 +1,8 @@
 import json
+import os
+if not os.path.exists('config.json'):
+    print('config.json not found, stopping...')
+    quit()
 useGPU = json.loads(open('config.json',).read())['useGPU']
 
 import tensorflow
