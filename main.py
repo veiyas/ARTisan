@@ -3,7 +3,8 @@ from tensorflow import keras
 from tensorflow.keras.applications import vgg19
 import numpy as np
 import tensorflow as tf
-print(tf.test.gpu_device_name())
+import time
+# print(tf.test.gpu_device_name())
 
 
 print('Tensorflow version:', tf.__version__)
@@ -17,7 +18,7 @@ content_img_path = keras.utils.get_file(
 style_img_path = keras.utils.get_file(
     "starry_night.jpg", "https://i.imgur.com/9ooB60I.jpg")
 
-display(Image(content_img_path))
+# display(Image(content_img_path))
 # display(Image(style_img_path))
 
 content_width, content_height = keras.preprocessing.image.load_img(
@@ -70,7 +71,6 @@ def gram_matrix(x):
 # It is based on the gram matrices (which capture style) of
 # feature maps from the style reference image
 # and from the generated image
-
 
 def style_loss(style, combination):
     S = gram_matrix(style)
@@ -149,9 +149,9 @@ combination_img = tf.Variable(tf.random.uniform(
 ))
 keras.preprocessing.image.save_img(
     "start.png", deprocess_img(combination_img.numpy()))
-display(Image("start.png"))
+# display(Image("start.png"))
 
-
+start_time = time.perf_counter()
 for i in range(1, num_iterations + 1):
     loss, gradients = compute_loss_and_gradients(
         combination_img, content_img, style_img)
@@ -159,8 +159,8 @@ for i in range(1, num_iterations + 1):
     optimizer.apply_gradients([(gradients, combination_img)])
 
     if i % save_interval == 0 or i == num_iterations:
-        print(f"Iteration {i}, loss = {loss}")
+        print(f"Iteration {i}, loss = {loss}, elapsed time = {time.perf_counter() - start_time}")
         img = deprocess_img(combination_img.numpy())
         file_name = f"result-at-{i}-iterations.png"
         keras.preprocessing.image.save_img(file_name, img)
-        display(Image(f"result-at-{i}-iterations.png"))
+        # display(Image(f"result-at-{i}-iterations.png"))
