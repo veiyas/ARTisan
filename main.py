@@ -159,7 +159,7 @@ for i in range(1, num_iterations + 1):
     optimizer.apply_gradients([(gradients, combination_img)])
 
     if i % save_interval == 0 or i == num_iterations:
-        print(f"Iteration {i}, loss = {loss}, elapsed time = {time.perf_counter() - start_time}")
+        print(f"Iteration {i}, loss = {loss}, elapsed time = {(time.perf_counter() - start_time)/60} min")
         img = deprocess_img(combination_img.numpy())
         file_name = f"result-at-{i}-iterations.png"
         keras.preprocessing.image.save_img(file_name, img)
