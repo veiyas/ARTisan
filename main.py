@@ -10,13 +10,13 @@ import time
 print('Tensorflow version:', tf.__version__)
 
 content_img_path = keras.utils.get_file(
-    "trams.jpg", "https://www.svtstatic.se/image/wide/992/15663340/1575374592?format=auto")
+    "knug.jpg", "https://i.imgur.com/ir0JCgx.jpeg")
 
 # content_img_path = keras.utils.get_file(
 #     "rabbel.jpg", "https://static.wikia.nocookie.net/vintergatan/images/f/fd/Rabbel.jpg/revision/latest/scale-to-width-down/1000?cb=20201127071427&path-prefix=sv")
 
 style_img_path = keras.utils.get_file(
-    "starry_night.jpg", "https://i.imgur.com/9ooB60I.jpg")
+    "pillars.jpg", "https://upload.wikimedia.org/wikipedia/commons/6/68/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg")
 
 # display(Image(content_img_path))
 # display(Image(style_img_path))
