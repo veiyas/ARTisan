@@ -1,25 +1,36 @@
-from IPython.display import Image, display
+# Disable info log messages to get a cleaner terminal
+# Can only be done before importing tf
+import os
+import logging
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
+logging.getLogger('tensorflow').setLevel(logging.FATAL)
+
 from tensorflow import keras
 from tensorflow.keras.applications import vgg19
 import numpy as np
 import tensorflow as tf
 import time
-# print(tf.test.gpu_device_name())
-
 
 print('Tensorflow version:', tf.__version__)
+print('Available GPU:', tf.test.gpu_device_name())
+
+# For some reason this is needed to avoid problems in some cases maybe?
+# Might be a windows thing?
+# https://github.com/tensorflow/tensorflow/issues/25446#issuecomment-607273345
+gpu_devices = tf.config.experimental.list_physical_devices('GPU')
+for device in gpu_devices:
+    tf.config.experimental.set_memory_growth(device, True)
+
 
 content_img_path = keras.utils.get_file(
-    "knug.jpg", "https://i.imgur.com/ir0JCgx.jpeg")
+    "trams.jpg", "https://www.svtstatic.se/image/wide/992/15663340/1575374592?format=auto")
 
 # content_img_path = keras.utils.get_file(
 #     "rabbel.jpg", "https://static.wikia.nocookie.net/vintergatan/images/f/fd/Rabbel.jpg/revision/latest/scale-to-width-down/1000?cb=20201127071427&path-prefix=sv")
 
 style_img_path = keras.utils.get_file(
-    "pillars.jpg", "https://upload.wikimedia.org/wikipedia/commons/6/68/Pillars_of_creation_2014_HST_WFC3-UVIS_full-res_denoised.jpg")
+    "starry_night.jpg", "https://i.imgur.com/9ooB60I.jpg")
 
-# display(Image(content_img_path))
-# display(Image(style_img_path))
 
 content_width, content_height = keras.preprocessing.image.load_img(
     content_img_path).size
@@ -131,13 +142,13 @@ def compute_loss_and_gradients(combination_img, content_img, style_img):
     gradients = tape.gradient(loss, combination_img)
     return loss, gradients
 
-num_iterations = 4000
-save_interval = 100
+num_iterations = 100
+save_interval = 10
 
 learning_rate_schedule = keras.optimizers.schedules.ExponentialDecay(
     initial_learning_rate=100.0,
     decay_steps=100,
-    decay_rate=1.00  # 0.96
+    decay_rate=0.96  # 0.96
 )
 optimizer = keras.optimizers.SGD(learning_rate_schedule)
 
@@ -147,9 +158,17 @@ style_img = preprocess_img(style_img_path)
 combination_img = tf.Variable(tf.random.uniform(
     content_img.shape, minval=-128, maxval=128  # No idea what im doing
 ))
+
+time_str = time.strftime("%Y%m%d-%H%M%S")
+save_directory = f"{os.getcwd()}/output/started-at-{time_str}"
+os.mkdir(save_directory)
+
 keras.preprocessing.image.save_img(
-    "start.png", deprocess_img(combination_img.numpy()))
-# display(Image("start.png"))
+    save_directory + "/result-at-0-iterations.png", deprocess_img(combination_img.numpy()))
+keras.preprocessing.image.save_img(
+    save_directory + "/content.png", deprocess_img(content_img.numpy()))
+keras.preprocessing.image.save_img(
+    save_directory + "/style.png", deprocess_img(style_img.numpy()))
 
 start_time = time.perf_counter()
 for i in range(1, num_iterations + 1):
@@ -159,8 +178,9 @@ for i in range(1, num_iterations + 1):
     optimizer.apply_gradients([(gradients, combination_img)])
 
     if i % save_interval == 0 or i == num_iterations:
-        print(f"Iteration {i}, loss = {loss}, elapsed time = {(time.perf_counter() - start_time)/60} min")
+        elapsed_time = (time.perf_counter() - start_time)/60
+        print(f"Iteration {i}, loss = {loss:.2f}, elapsed time = {elapsed_time:.2f} min")
         img = deprocess_img(combination_img.numpy())
+
         file_name = f"result-at-{i}-iterations.png"
-        keras.preprocessing.image.save_img(file_name, img)
-        # display(Image(f"result-at-{i}-iterations.png"))
+        keras.preprocessing.image.save_img(f"{save_directory}/{file_name}", img)
