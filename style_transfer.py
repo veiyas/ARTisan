@@ -10,7 +10,6 @@ from tensorflow.keras.applications import vgg19
 import numpy as np
 import tensorflow as tf
 import time
-import json
 
 
 print('Tensorflow version:', tf.__version__)
@@ -63,18 +62,11 @@ class StyleTransferConfig:
         for attr, value in vars(self.optimizer.learning_rate).items():
             string += f"\t\t{attr}: {value}\n"
         return string
-        # '\n'.join(
-        #     f"Number of iterations: {self.num_iterations}",
-        #     f"Save interval: {self.save_interval}",
-        #     f"Total variation weight: {self.total_variation_weight}",
-        #     f"Style weight"
-        # )
-
 
 
 def neural_style_transfer(content_img_url: str, style_img_url:str, config: StyleTransferConfig):
-    content_img_path = keras.utils.get_file("content.jpg", content_img_url)
-    style_img_path = keras.utils.get_file("starry_night.jpg", style_img_url)
+    content_img_path = keras.utils.get_file(os.path.basename(content_img_url), content_img_url)
+    style_img_path = keras.utils.get_file(os.path.basename(style_img_url), style_img_url)
 
 
     content_width, content_height = keras.preprocessing.image.load_img(
@@ -200,6 +192,7 @@ def neural_style_transfer(content_img_url: str, style_img_url:str, config: Style
 
     with open(save_directory + '/config.txt', 'a') as the_file:
         the_file.write(str(config))
+
     iterations_info = ""
 
     start_time = time.perf_counter()
