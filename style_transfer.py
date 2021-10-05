@@ -182,9 +182,6 @@ def neural_style_transfer(content_img_url: str, style_img_url:str, config: Style
     time_str = time.strftime("%Y%m%d-%H%M%S")
     currentDir = os.getcwd()
     save_directory = f"{currentDir}/output/started-at-{time_str}"
-   
-    print(currentDir)
-    #print(f"{os.getcwd()}/output/started-at-{time_str]")
     os.makedirs(save_directory)
 
     keras.preprocessing.image.save_img(

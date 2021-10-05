@@ -1,8 +1,8 @@
 from style_transfer import neural_style_transfer, StyleTransferConfig
 
 config = StyleTransferConfig(
-    num_iterations=100,
-    save_interval=10
+    num_iterations=20000,
+    save_interval=1000
 )
 
 # neural_style_transfer(
@@ -12,7 +12,7 @@ config = StyleTransferConfig(
 # )
 
 neural_style_transfer(
-    content_img_url="https://upload.wikimedia.org/wikipedia/commons/d/d7/Green_Sea_Turtle_grazing_seagrass.jpg",
+    content_img_url="https://upload.wikimedia.org/wikipedia/commons/2/2f/Rijksdag_Stockholm.jpg",
     style_img_url="https://upload.wikimedia.org/wikipedia/commons/0/0a/The_Great_Wave_off_Kanagawa.jpg",
     config=config
 )
