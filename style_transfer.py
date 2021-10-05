@@ -180,8 +180,12 @@ def neural_style_transfer(content_img_url: str, style_img_url:str, config: Style
         ))
 
     time_str = time.strftime("%Y%m%d-%H%M%S")
-    save_directory = f"{os.getcwd()}/output/started-at-{time_str}"
-    os.mkdir(save_directory)
+    currentDir = os.getcwd()
+    save_directory = f"{currentDir}/output/started-at-{time_str}"
+   
+    print(currentDir)
+    #print(f"{os.getcwd()}/output/started-at-{time_str]")
+    os.makedirs(save_directory)
 
     keras.preprocessing.image.save_img(
         save_directory + "/result-at-0-iterations.png", deprocess_img(combination_img.numpy()))
