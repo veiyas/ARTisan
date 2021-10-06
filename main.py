@@ -1,8 +1,19 @@
 from style_transfer import neural_style_transfer, StyleTransferConfig
+from tensorflow import keras
 
 config = StyleTransferConfig(
-    num_iterations=100,
-    save_interval=10
+    num_iterations=10000,
+    save_interval=100,
+    start_from_content=False,
+    optimizer = keras.optimizers.Adam(
+        keras.optimizers.schedules.ExponentialDecay(
+            initial_learning_rate=3.0,
+            decay_steps=100,
+            decay_rate=0.96  # 0.96
+        )
+    ),
+    # style_weight=0,
+    # total_variation_weight=0
 )
 
 # neural_style_transfer(
@@ -12,7 +23,7 @@ config = StyleTransferConfig(
 # )
 
 neural_style_transfer(
-    content_img_url="https://upload.wikimedia.org/wikipedia/commons/d/d7/Green_Sea_Turtle_grazing_seagrass.jpg",
+    content_img_url="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Tram_Norrk%C3%B6ping_May_2012.jpg/1024px-Tram_Norrk%C3%B6ping_May_2012.jpg",
     style_img_url="https://upload.wikimedia.org/wikipedia/commons/0/0a/The_Great_Wave_off_Kanagawa.jpg",
     config=config
 )

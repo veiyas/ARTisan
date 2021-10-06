@@ -10,9 +10,9 @@ def create_mov_from_img_seq(folder, video_file_name, fps):
 
 def main():
     create_mov_from_img_seq(
-        os.path.join("output", "started-at-20211004-120040"),
+        os.path.join("output", "started-at-20211006-190059"),
         "seq.mp4",
-        fps=10
+        fps=30
     )
 
 if __name__ == "__main__":
