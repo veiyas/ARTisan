@@ -1,6 +1,7 @@
 from style_transfer import neural_style_transfer, StyleTransferConfig
 
 config = StyleTransferConfig(
+    optimizer_name='adam',
     num_iterations=20000,
     save_interval=1000
 )
