@@ -1,4 +1,5 @@
 from style_transfer import neural_style_transfer, StyleTransferConfig
+from tensorflow import keras
 
 config = StyleTransferConfig(
     optimizer_name='adam',
