@@ -175,9 +175,12 @@ def neural_style_transfer(content_img_url: str, style_img_url: str, config: Styl
             content_img.shape, minval=-128, maxval=128  # No idea what im doing
         ))
 
+    decay_rate = keras.backend.eval(config.optimizer.learning_rate.decay_rate)
+    decay_steps = keras.backend.eval(config.optimizer.learning_rate.decay_steps)
+    init_learning_rate = keras.backend.eval(config.optimizer.learning_rate.initial_learning_rate)
     time_str = time.strftime("%Y%m%d-%H%M%S")
     currentDir = os.getcwd()
-    save_directory = f"{currentDir}/output/started-at-{time_str}-opti={config.optimizer_name}"
+    save_directory = f"{currentDir}/output/started-at-{time_str}-opti={config.optimizer_name}-init-learning-rate={init_learning_rate}-decay-rate-steps={decay_rate},{decay_steps}"
     os.makedirs(save_directory)
 
     keras.preprocessing.image.save_img(
