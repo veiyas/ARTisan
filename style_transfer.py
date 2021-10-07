@@ -1,15 +1,15 @@
 # Disable info log messages to get a cleaner terminal
-# Can only be done before importing tf
+# NOTE THAT THIS HAS TO BE DONE BEFORE IMPORTING TENSORFLOW
+# DON'T MOVE PLZzz
+import os
+import logging
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
+logging.getLogger('tensorflow').setLevel(logging.WARN)
 import time
 import tensorflow as tf
 import numpy as np
 from tensorflow.keras.applications import vgg19
 from tensorflow import keras
-import os
-import logging
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
-logging.getLogger('tensorflow').setLevel(logging.WARN)
-
 
 print('Tensorflow version:', tf.__version__)
 print('Available GPU:', tf.test.gpu_device_name())
@@ -22,14 +22,20 @@ for device in gpu_devices:
 
 class StyleTransferConfig:
     def __init__(self,
-                 optimizer_name,
-                 num_iterations=5000,
-                 save_interval=100,
-                 total_variation_weight=1e-6,
-                 style_weight=1e-6,
-                 content_weight=2.5e-5,
-                 content_layer_name="block5_conv2",
-                 style_layers_names=[
+        optimizer=keras.optimizers.SGD(
+            keras.optimizers.schedules.ExponentialDecay(
+                initial_learning_rate=100.0,
+                decay_steps=100,
+                decay_rate=0.96  # 0.96
+            )
+        ),
+        num_iterations=5000,
+        save_interval=100,
+        total_variation_weight=1e-6,
+        style_weight=1e-6,
+        content_weight=2.5e-5,
+        content_layer_name="block5_conv2",
+        style_layers_names=[
             'block1_conv1',
             'block2_conv1',
             'block3_conv1',
@@ -38,7 +44,7 @@ class StyleTransferConfig:
         start_from_content=True,  # Start from content img instead of noise
 
     ):
-        self.optimizer_name = optimizer_name
+        self.optimizer = optimizer
         self.num_iterations = num_iterations
         self.save_interval = save_interval
         self.total_variation_weight = total_variation_weight
@@ -47,25 +53,7 @@ class StyleTransferConfig:
         self.content_layer_name = content_layer_name
         self.style_layers_names = style_layers_names
         self.start_from_content = start_from_content
-
-        if optimizer_name.lower() == 'adam':
-            print(f'Optimizer: {self.optimizer_name}')
-            self.optimizer = keras.optimizers.Adam(
-                keras.optimizers.schedules.ExponentialDecay(
-                    initial_learning_rate=100.0,
-                    decay_steps=100,
-                    decay_rate=0.96  # 0.96
-                )
-            )
-        else:
-            print(f'Optimizer: {self.optimizer_name}')
-            self.optimizer = keras.optimizers.SGD(
-                keras.optimizers.schedules.ExponentialDecay(
-                    initial_learning_rate=100.0,
-                    decay_steps=100,
-                    decay_rate=0.96  # 0.96
-                )
-            )
+        self.optimizer_name = type(self.optimizer).__name__
 
     def __str__(self):
         string = ""
