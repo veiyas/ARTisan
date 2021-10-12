@@ -1,0 +1,16 @@
+optimizer: <keras.optimizer_v2.adam.Adam object at 0x7f124bec2810>
+num_iterations: 4000
+save_interval: 200
+total_variation_weight: 1e-07
+style_weight: 1e-06
+content_weight: 2.5e-08
+content_layer_name: block5_conv2
+style_layers_names: ['block1_conv1', 'block2_conv1', 'block3_conv1', 'block4_conv1', 'block5_conv1']
+start_from_content: True
+optimizer_name: Adam
+	learning rate: <keras.optimizer_v2.learning_rate_schedule.ExponentialDecay object at 0x7f124bec27d0>
+		initial_learning_rate: 5.0
+		decay_steps: 100
+		decay_rate: 0.96
+		staircase: False
+		name: None
