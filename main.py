@@ -2,12 +2,12 @@ from style_transfer import neural_style_transfer, StyleTransferConfig
 from tensorflow import keras
 
 config = StyleTransferConfig(
-    num_iterations=100,
-    save_interval=10,
+    num_iterations=4000,
+    save_interval=100,
     start_from_content=True,
     optimizer = keras.optimizers.Adam(
         keras.optimizers.schedules.ExponentialDecay(
-            initial_learning_rate=3.0,
+            initial_learning_rate=5.0,
             decay_steps=100,
             decay_rate=0.96  # 0.96
         )
